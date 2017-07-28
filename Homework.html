@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>d3-start</title>
+    <script src="https://d3js.org/d3.v3.js"></script>
+    <style>
+        div {
+            font-size: 7px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <svg width="900" height="400">
+    
+   
+    
+</svg>
+
+    <script>
+        d3.json("invoice-taipei.json", function(dataSet) {
+
+            var svg = d3.select("svg");
+            var fDataSet = dataSet.filter(function(d) {
+
+                return d.date === "2016/8/1" && d.cid === "A" && d.amount > 1000000000;
+            });
+            for (var i = 0; i < fDataSet.length; i++) {
+                svg.append("rect")
+                    .attr({
+                        x: 180,
+                        y: 10 + 35 * i,
+                        width: fDataSet[i].amount / 50000000,
+                        height: 20,
+                        fill: "red"
+
+                    });
+                svg.append("text")
+                    .attr({
+                        x: 0,
+                        y: 25 + 35 * i,
+                        "font-size": "12px",
+                        "font-family": "arial"
+
+                    }).text(fDataSet[i].industry);
+
+            };
+
+        });
+
+    </script>
+    <hr>
+
+    <div></div>
+    <div></div>
+    <div></div>
+
+    <script>
+        var arr = [85, 60, 99, 49, 77, 82];
+
+        bind(arr);
+        render();
+
+        function bind(data) {
+            var selection = d3.select("body")
+                .selectAll("div")
+                .data(data);
+            selection.enter().append("div");
+            selection.exit().remove();
+
+
+        };
+
+        function render() {
+            d3.selectAll("div")
+                .text(function(aa, bb) {
+                    return (bb + 1) + ":" + aa;
+                })
+                .style({
+                    color: function(aa) {
+                        if (aa < 70) {
+                            return "red";
+                        } else {
+                            return "black";
+                        };
+
+                    },
+                    "font-size": "30px"
+                });
+        };
+
+    </script>
+    <hr>
+
+    <input type="button" onclick="add()" value="新增">
+    <input type="button" onclick="del()" value="移除">
+    <script>
+        var arr = [85, 60, 99, 49, 77, 82];
+        svg();
+        bind(arr);
+        render();
+
+
+
+        function svg() {
+            d3.select("body")
+                .append("svg")
+                .attr({
+                    width: 500,
+                    height: 500,
+                    class: "svg1"
+                });
+
+        };
+
+        function bind(data) {
+            var selection = d3.select("body>svg.svg1")
+                .selectAll("g")
+                .data(data);
+
+            selection.enter().append("g").attr({
+                class: "bar1"
+            });
+            selection.exit().remove();
+
+        };
+
+        function render() {
+            d3.selectAll("g.bar1").selectAll("rect").remove();
+            d3.selectAll("g.bar1").selectAll("text").remove();
+
+
+            d3.selectAll("g.bar1")
+                .append("rect")
+                .attr({
+                    x: function(d, i) {
+                        return 100 + 32 * i;
+                    },
+                    y: function(d, i) {
+                        return 500 - 100 - d;
+                    },
+                    width: 30,
+                    height: function(d, i) {
+                        return d;
+                    }
+
+                }).style({
+                    fill: function(d, i) {
+                        if (d < 70) {
+                            return "red"
+                        } else {
+                            return "lightgreen";
+                        }
+
+                    }
+
+                });
+            d3.selectAll("g.bar1")
+                .append("text")
+                .attr({
+                    x: function(d, i) {
+                        return 115 + 32 * i;
+                    },
+                    y: function(d, i) {
+                        return 420;
+                    },
+                    "text-anchor": "middle"
+
+                }).text(function(d) {
+                    return d;
+                });
+
+
+
+        };
+
+        function Random(N, M) {
+            return Math.floor(Math.random() * (M - N + 1) + N);
+        };
+
+        function add() {
+            arr.push(Random(10, 100));
+            bind(arr);
+            render();
+        };
+
+        function del() {
+            arr.pop();
+            bind(arr);
+            render();
+        };
+
+    </script>
+
+
+
+
+</body>
+
+</html>
